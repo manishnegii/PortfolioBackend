@@ -5,7 +5,13 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+origin: "https://portfolio-frontend-murex-xi.vercel.app",
+methods: ["GET","POST"],
+credentials: true,
+})
+);
+
 app.use(express.json());
 
 const resend = new Resend(process.env.RESEND_API_KEY);
