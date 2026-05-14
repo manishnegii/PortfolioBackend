@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
+const {Resend} = require("resend");
 require("dotenv").config();
 
 const app = express();
@@ -8,15 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure:false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.get("/", (req, res) => {
   res.send("Portfolio Backend Running");
@@ -34,9 +26,8 @@ app.post("/api/contact", async (req, res) => {
     }
 
     // Email template
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      replyTo: email,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to: process.env.EMAIL_USER,
 
       subject: subject
@@ -70,9 +61,7 @@ app.post("/api/contact", async (req, res) => {
           <p>${message}</p>
         </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     return res.status(200).json({
       success: true,
