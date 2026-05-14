@@ -9,7 +9,7 @@ app.use(cors({
   origin: "https://portfolio-frontend-silk-zeta.vercel.app",
   methods: ["GET","POST"],
   credentials: true,
-});
+}));
 
 app.use(express.json());
 
